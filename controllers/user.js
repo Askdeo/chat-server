@@ -37,9 +37,14 @@ exports.userSignup = (req, res, next) => {
                         })
                     })
                     .then(user => {
+                        user.createProfile({
+                            username: username,
+                            avatar: 'images/dummy-avatar-300x300.jpg'
+                        })
                         res.status(200)
                             .json({message: 'User created successfully', user: user})
                     })
+                    
             })
         })
     .catch(err => {
@@ -69,7 +74,7 @@ exports.userLogin = (req, res, next) => {
 
                     const payload = {
                         id: user.id,
-                        name: user.name
+                        username: user.username
                     };
 
                     const token = jwt.sign(
@@ -77,7 +82,6 @@ exports.userLogin = (req, res, next) => {
                         'secret',
                         { expiresIn: 3600 }
                     );
-
                     return res.status(200)
                         .json({
                             success: true,
